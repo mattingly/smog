@@ -57,7 +57,7 @@ for(i in 1:length(filepaths)){
   melted <- data.frame(cbind(melted, "id"=1))
   
   #Recast as one row
-  table <- dcast(melted,  id~ Time..CST. +variable )
+  table <- dcast(melted,  id~ variable+Time..CST. )
 
   #Eliminate extraneous id variable created for the transformation
   table <- table[, !(names(table) %in% "id")]
@@ -105,6 +105,7 @@ for(i in 1:length(air)){
 names(air) <- gsub(" ", "_", names(air), fixed = TRUE)
 names(air) <- gsub(":", "_", names(air), fixed = TRUE)
 names(air) <- gsub(".", "_", names(air), fixed = TRUE)
+names(air) <- gsub("__", "_", names(air), fixed = TRUE)
+names(air)[5:28] <- paste(as.character("particulate"), 0:23, sep="_")
 
-
-write.csv(air, "beijing_air_weather.csv")
+save(air, file="beijing_air_weather.dta")
