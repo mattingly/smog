@@ -24,12 +24,11 @@ weather <- NULL
 #The product is a dataframe with a row for each day
 #The columns represent hourly observations
 
-i <- 812
 
 for(i in 1:length(filepaths)){
   
   #Read in the file
-  table <- read.csv(filepaths[i])
+  table <- data.frame(read.csv(filepaths[i]))
   
   #Remove observations made at half past the hour
   table <- table[table$Time..CST.%in% times, ]
@@ -73,10 +72,12 @@ for(i in 1:length(filepaths)){
   if(i>1){weather[i,] <- table}
 
   #This loop will likely take a minute or two on a laptop
+  print(i/length(filepaths))
 }
 
 #Clean up the workspace a little
 rm(melted, table, filepaths, i, j, times, missing, newrow)
+
 
 #Create a date
 beijing$Date <- paste(beijing$Year, beijing$Month, beijing$Day, sep="_")
@@ -86,5 +87,24 @@ weather$Date <- paste(weather$Year, weather$Month, weather$Day, sep="_")
 air <- merge(beijing, weather, by="Date")
 
 rm(beijing, weather)
+
+
+#Somewhere in this process some columns aquired the wrong class
+#This loop applies the correct class
+
+for(i in 1:length(air)){
+  if(length(grep("Conditions", colnames(air)[i]))==0 & length(grep("Wind.Dir", colnames(air)[i]))==0){
+    air[,i] <- as.numeric(air[,i])
+  }
+  if(length(grep("Conditions", colnames(air)[i]))>0 | length(grep("Wind.Dir", colnames(air)[i]))>0){
+    air[,i] <- as.factor(air[,i])
+  } 
+}
+
+#Finally, regularize the names
+names(air) <- gsub(" ", "_", names(air), fixed = TRUE)
+names(air) <- gsub(":", "_", names(air), fixed = TRUE)
+names(air) <- gsub(".", "_", names(air), fixed = TRUE)
+
 
 write.csv(air, "beijing_air_weather.csv")
