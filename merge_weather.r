@@ -106,6 +106,5 @@ names(air) <- gsub(" ", "_", names(air), fixed = TRUE)
 names(air) <- gsub(":", "_", names(air), fixed = TRUE)
 names(air) <- gsub(".", "_", names(air), fixed = TRUE)
 names(air) <- gsub("__", "_", names(air), fixed = TRUE)
-names(air)[5:28] <- paste(as.character("particulate"), 0:23, sep="_")
 
 save(air, file="beijing_air_weather.dta")
