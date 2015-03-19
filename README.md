@@ -2,7 +2,9 @@
 
 This contains files to scrape historical and current data on smog and weather conditions in China. 
 
-It also contains draft R scripts used to make VERY preliminary predictions about future fine particulate matter (PM 2.5) levels in Beijing and other cities. It bears repeating that this is a work in progress!
+It also contains draft R scripts used to make VERY preliminary predictions about future fine particulate matter (PM 2.5) levels in Beijing and other cities. 
+
+The prediction relies on a combination of random forests, regression trees, generalized linear models, and regression splines. It currently forecasts smog with reasonable accuracy (that is, within 25 micograms per cubic meter of the actual average daily value) about 75 percent of the time.
 
 Run the files in this order:
 
