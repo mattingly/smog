@@ -38,28 +38,40 @@ rm(list=ls())
 
 
 ###################################
-# Do hot, rainy days foretell 
-# clear skies the next day?
+# How are wind and temperature
+# correlated with clear skies?
 ###################################
 
-#Load a different dataset I have already created and cleaned
+#Load in the dataset with scraped weather data
 load("beijing_air_cleaned.dta")
 
-#Reduce the dataset down
+#Reduce the dataset to the variables we want
 air <- air[,c("Rain", "Temp_12_00_PM", "average.d1", "Conditions_12_00_PM")]
 air <- na.omit(air)
 air$Rain <- as.factor(air$Rain)
 
-#The scatterplot is not very informative
-ggplot(air, aes(x=Temp_12_00_PM, y=average.d1, color=Rain)) + geom_point(shape=1, position="jitter")
+#Create a cold and warm days variable
+air$Temp_Median <- "Cold Days"
+air$Temp_Median[which(air$Temp_12_00_PM > median(air$Temp_12_00_PM, na.rm=T))] <- "Hot Days"
+air$Temp_Median <- as.factor(air$Temp_Median)
 
-#A conditional tree plot makes a (slightly) clearer point
+#Setting the colors for ggplot
+myColors <- c("#f5a6a7", "#e72b2d")
+names(myColors) <- levels(air$Temp_Median)
 
-library(partykit)
-tree <- ctree(average.d1~Rain+Temp_12_00_PM, 
-              data=air)
-
-#There appears to be some truth to the perception about rain and heat
-pdf("rain_heat_pollution.pdf")
-plot(tree, main="Beijing Air Pollution, Conditional Tree")
+pdf("wind_temp_pollution.pdf")
+  ggplot(air,aes(x = air$Wind_Speed_12_00_PM,y = air$average.d1)) + 
+  scale_fill_manual(values = c("green", "blue")) +
+  geom_jitter(alpha = I(1/2), aes(color = Temp_Median), position = position_jitter(w = 2, h = 2)) +
+  scale_y_continuous(limits = c(45,240)) +
+  scale_x_continuous(limits = c(0,30)) +
+  ggtitle ("Average Daily PM 2.5") + 
+  xlab("Wind Speed") +  ylab ("PM 2.5  microgram/m3") + 
+  scale_colour_manual(name = "grp",values = myColors) +
+  geom_smooth( aes(group = Temp_Median, color=Temp_Median), alpha = I(1/1.8))
 dev.off()
+
+
+
+
+
