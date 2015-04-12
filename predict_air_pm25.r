@@ -13,6 +13,8 @@
 
 load("beijing_air_weather.dta")
 
+names(air) <- gsub("__", "_", names(air), fixed = TRUE)
+
 air$average.today <- rowMeans(air[,c("0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","23")], na.rm=T)
 
 names(air)[5:28] <- paste(as.character("particulate"), 0:23, sep="_")
@@ -25,7 +27,7 @@ air$average.d3 <- c(air$average.today[4:length(air$average.today)], NA, NA, NA)
 air$average.d4 <- c(air$average.today[5:length(air$average.today)], NA, NA, NA, NA)
 air$average.d5 <- c(air$average.today[6:length(air$average.today)], NA, NA, NA, NA, NA)
 
-
+names(air)
 #I will use the actual next day noon conditions as the "forecast"
 #Obviously real forecasts are not this accurate!
 #Later I will attempt to add historical forecasts.
