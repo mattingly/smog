@@ -39,7 +39,7 @@ rm(list=ls())
 
 ###################################
 # How are wind and temperature
-# correlated with clear skies?
+# correlated with future pollution?
 ###################################
 
 #Load in the dataset with scraped weather data
@@ -65,8 +65,8 @@ pdf("wind_temp_pollution.pdf")
   geom_jitter(alpha = I(1/2), aes(color = Temp_Median), position = position_jitter(w = 2, h = 2)) +
   scale_y_continuous(limits = c(45,240)) +
   scale_x_continuous(limits = c(0,30)) +
-  ggtitle ("Average Daily PM 2.5") + 
-  xlab("Wind Speed") +  ylab ("PM 2.5  microgram/m3") + 
+  ggtitle ("Tomorrow's Pollution Levels") + 
+  xlab("Wind Speed Today") +  ylab ("PM 2.5  microgram/m3") + 
   scale_colour_manual(name = "grp",values = myColors) +
   geom_smooth( aes(group = Temp_Median, color=Temp_Median), alpha = I(1/1.8))
 dev.off()
